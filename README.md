@@ -18,6 +18,10 @@ SETUP
 3. Run SchedulerMain.java (or in the terminal: javac *.java && java SchedulerMain).
 4. Expected first message: Loaded 5 appointments from data/seed_schedule.txt
 
+1. A tree set is a self balancing BST with all unique elements. 
+2. the floor method returns the biggest value smaller than a requested element. otherwise null
+3. ceiling returns the smallest element greater than a requested element. otherwise null. 
+4. if the appotment time requested is unavailable it could suggest similarly timed appointments. It also just overalls tells you where to place each appointment and if fthere is enough time for it. 
 
 ONLY EDIT AppointmentScheduler.java.
 The menu and initial file loading work before any TODO methods are completed.
