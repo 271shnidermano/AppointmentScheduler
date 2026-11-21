@@ -1,4 +1,6 @@
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.TreeSet;
 
@@ -46,9 +48,22 @@ public class AppointmentScheduler {
     /** TODO 3: Cancel the appointment that STARTS at the given minute, if any. */
     public boolean cancel(int startMinutes) {
         // TODO: A temporary Appointment.keyAt(startMinutes) can act as a search key.
+        Appointment temp = schedule.first();
+        Appointment cancelling = schedule.first();
+        while (schedule.ceiling(temp)!=null&&temp!=null)
+        {
+            if(temp.getStartMinutes()==startMinutes)
+            {
+                cancelling = temp;
+                temp = null;
+            }
+        }
+        if(cancelling.getStartMinutes()==startMinutes||temp==null)
+            return schedule.remove(cancelling);
         return false;
+        
     }
-
+    
     /** TODO 4: Return the earliest appointment beginning at or after time. */
     public Appointment nextAtOrAfter(int minutes) {
         // TODO: TreeSet.ceiling(Appointment.keyAt(minutes)) is useful.
