@@ -23,51 +23,54 @@ public class AppointmentScheduler {
      * just the adjacent appointments. Return true only if added.
      */
     public boolean book(Appointment requested) {
-        // TODO: Check hours, previous neighbor, next neighbor; add if valid.
-        if(requested.getStartMinutes()<OPEN_MINUTES||requested.getEndMinutes()>CLOSE_MINUTES)
+        if(requested.getStartMinutes() < OPEN_MINUTES ||
+        requested.getEndMinutes() > CLOSE_MINUTES)
         {
             return false;
         }
+
+        // Find the appointments immediately before and after
         Appointment before = schedule.floor(requested);
         Appointment after = schedule.ceiling(requested);
-        if(requested.compareTo(before)-before.getDurationMinutes()<0||after.compareTo(requested)-requested.getDurationMinutes()<0)
+
+        // Check if the previous appointment overlaps
+        if(before != null && before.getEndMinutes() > requested.getStartMinutes())
         {
             return false;
         }
-        schedule.add(requested);
-        return true;
 
-        
+        // Check if the next appointment overlaps
+        if(after != null && requested.getEndMinutes() > after.getStartMinutes())
+        {
+            return false;
+        }
+
+        return schedule.add(requested);
     }
 
     /** TODO 2: Print appointments chronologically, or an empty-schedule message. */
     public void printSchedule() {
-        System.out.println(schedule);
+        if(schedule.isEmpty())
+        {
+            System.out.println("No appointments scheduled.");
+        }
+        else
+        {
+            System.out.println(schedule);
+        }
     }
 
-    /** TODO 3: Cancel the appointment that STARTS at the given minute, if any. */
+    /** TODO 3: Cancel the appointment that STARTS at the given minute, if any. */ 
     public boolean cancel(int startMinutes) {
         // TODO: A temporary Appointment.keyAt(startMinutes) can act as a search key.
-        Appointment temp = schedule.first();
-        Appointment cancelling = schedule.first();
-        while (schedule.ceiling(temp)!=null&&temp!=null)
-        {
-            if(temp.getStartMinutes()==startMinutes)
-            {
-                cancelling = temp;
-                temp = null;
-            }
-        }
-        if(cancelling.getStartMinutes()==startMinutes||temp==null)
-            return schedule.remove(cancelling);
-        return false;
-        
+        Appointment cancelling = Appointment.keyAt(startMinutes);
+        return schedule.remove(cancelling);
     }
     
     /** TODO 4: Return the earliest appointment beginning at or after time. */
-    public Appointment nextAtOrAfter(int minutes) {
+      public Appointment nextAtOrAfter(int minutes) {
         // TODO: TreeSet.ceiling(Appointment.keyAt(minutes)) is useful.
-        return null;
+        return schedule.ceiling(Appointment.keyAt(minutes));
     }
 
     /**
@@ -77,7 +80,11 @@ public class AppointmentScheduler {
      */
     public void write(PrintWriter out) {
         // TODO: Implement writing. Keep this exception until your code is ready.
-        throw new UnsupportedOperationException("write() not implemented");
+       out.println(FILE_HEADER);
+        for(Appointment a : schedule)
+        {
+            out.println(a.toFileLine());
+        }
     }
 
     /** PROVIDED: loading is deliberately independent of unfinished student methods. */
